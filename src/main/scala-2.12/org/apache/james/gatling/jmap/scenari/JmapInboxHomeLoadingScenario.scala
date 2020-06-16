@@ -8,6 +8,8 @@ import org.apache.james.gatling.control.UserFeeder.UserFeederBuilder
 import org.apache.james.gatling.jmap.JmapMessages.openpaasListMessageParameters
 import org.apache.james.gatling.jmap._
 
+import scala.concurrent.duration._
+
 class JmapInboxHomeLoadingScenario {
 
   private object Keys {
@@ -27,7 +29,8 @@ class JmapInboxHomeLoadingScenario {
       .group(InboxHomeLoading.name)(
         exec(RetryAuthentication.execWithRetryAuthentication(JmapMailbox.getMailboxes, JmapMailbox.getMailboxesChecks ++ JmapMailbox.saveInboxAs(Keys.inbox)))
           .exec(RetryAuthentication.execWithRetryAuthentication(JmapMessages.listMessages(openpaasListMessageParameters(Keys.inbox)), JmapMessages.nonEmptyListMessagesChecks))
-          .exec(RetryAuthentication.execWithRetryAuthentication(JmapMessages.getMessages(JmapMessages.previewMessageProperties, Keys.messageIds), isSuccess)))
+          .exec(RetryAuthentication.execWithRetryAuthentication(JmapMessages.getMessages(JmapMessages.previewMessageProperties, Keys.messageIds), isSuccess))
+          .pause(3 seconds, 5 seconds))
   }
 
 }
