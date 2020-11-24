@@ -134,7 +134,8 @@ object JmapEmail {
     feed(mailFeeder)
       .feed(recipientFeeder)
       .exec(submitEmail()
-        .check(JmapHttp.statusOk, JmapHttp.noError, JmapEmail.emailCreatedChecks(), JmapEmail.emailSubmittedChecks()))
+        .check(JmapHttp.statusOk, JmapHttp.noError, JmapEmail.emailCreatedChecks(), JmapEmail.emailSubmittedChecks()).check(bodyString.saveAs("responseBody")))
+      .exec { session => println(session("responseBody").as[String]); session}
   }
 
   def submitEmail(title: RequestTitle = RequestTitle("submitEmails"),
