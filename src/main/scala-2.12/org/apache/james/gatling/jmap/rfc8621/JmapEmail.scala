@@ -134,8 +134,7 @@ object JmapEmail {
     feed(mailFeeder)
       .feed(recipientFeeder)
       .exec(submitEmail()
-        .check(JmapHttp.statusOk, JmapHttp.noError, JmapEmail.emailCreatedChecks(), JmapEmail.emailSubmittedChecks()).check(bodyString.saveAs("responseBody")))
-      .exec { session => println(session("responseBody").as[String]); session}
+        .check(JmapHttp.statusOk, JmapHttp.noError, JmapEmail.emailCreatedChecks(), JmapEmail.emailSubmittedChecks()))
   }
 
   def submitEmail(title: RequestTitle = RequestTitle("submitEmails"),
@@ -149,7 +148,7 @@ object JmapEmail {
     JmapHttp.apiCall(title.title)
       .body(StringBody(
         s"""{
-           |  "using": ["urn:ietf:params:jmap:core","urn:ietf:params:jmap:mail"],
+           |  "using": ["urn:ietf:params:jmap:core","urn:ietf:params:jmap:mail", "urn:ietf:params:jmap:submission"],
            |  "methodCalls": [
            |    ["Email/set", {
            |      "accountId": "$${$accountId}",
